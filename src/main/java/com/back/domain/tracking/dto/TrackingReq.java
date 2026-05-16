@@ -1,4 +1,4 @@
 package com.back.domain.tracking.dto;
 
-public class TrackingDto {
+public class TrackingReq {
 }
