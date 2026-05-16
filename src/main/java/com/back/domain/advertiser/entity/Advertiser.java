@@ -1,5 +1,7 @@
 package com.back.domain.advertiser.entity;
 
+import com.back.domain.advertiser.dto.AdvertiserCreateReq;
+import com.back.domain.advertiser.dto.AdvertiserUpdateReq;
 import com.back.global.jpa.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,6 +20,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class Advertiser extends BaseEntity {
 
+  private static final String DEFAULT_STATUS = "ACTIVE";
+
   @Column(nullable = false)
   private String name;
 
@@ -32,4 +36,21 @@ public class Advertiser extends BaseEntity {
 
   @Column(nullable = false)
   private String status;
+
+  public static Advertiser from(AdvertiserCreateReq req) {
+    return Advertiser.builder()
+        .name(req.name())
+        .businessNumber(req.businessNumber())
+        .contactName(req.contactName())
+        .contactEmail(req.contactEmail())
+        .status(DEFAULT_STATUS)
+        .build();
+  }
+
+  public void update(AdvertiserUpdateReq req) {
+    this.name = req.name();
+    this.contactName = req.contactName();
+    this.contactEmail = req.contactEmail();
+    this.status = req.status();
+  }
 }
