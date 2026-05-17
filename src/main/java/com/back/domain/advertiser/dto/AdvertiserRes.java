@@ -3,7 +3,7 @@ package com.back.domain.advertiser.dto;
 import com.back.domain.advertiser.entity.Advertiser;
 import java.time.LocalDateTime;
 
-public record AdvertiserResponse(
+public record AdvertiserRes(
     Long id,
     String name,
     String businessNumber,
@@ -14,8 +14,8 @@ public record AdvertiserResponse(
     LocalDateTime modifyDate
 ) {
 
-  public static AdvertiserResponse from(Advertiser advertiser) {
-    return new AdvertiserResponse(
+  public static AdvertiserRes from(Advertiser advertiser) {
+    return new AdvertiserRes(
         advertiser.getId(),
         advertiser.getName(),
         advertiser.getBusinessNumber(),
