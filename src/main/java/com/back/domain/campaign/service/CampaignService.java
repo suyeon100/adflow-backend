@@ -4,6 +4,7 @@ import com.back.domain.advertiser.entity.Advertiser;
 import com.back.domain.advertiser.repository.AdvertiserRepository;
 import com.back.domain.campaign.dto.CampaignReq;
 import com.back.domain.campaign.dto.CampaignRes;
+import com.back.domain.campaign.dto.CampaignUpdateReq;
 import com.back.domain.campaign.entity.Campaign;
 import com.back.domain.campaign.repository.CampaignRepository;
 import java.util.List;
@@ -67,6 +68,40 @@ public class CampaignService {
    */
   public CampaignRes getCampaign(Long campaignId) {
     return CampaignRes.from(findCampaignById(campaignId));
+  }
+
+  /**
+   * 특정 캠페인 정보를 수정합니다.
+   * <p><b>실행 로직:</b><br>
+   * 1. 캠페인 ID로 수정 대상 엔티티를 조회합니다. <br>
+   * 2. 대상 캠페인이 존재하지 않으면 {@code ResponseStatusException}을 발생시킵니다. <br>
+   * 3. 요청값으로 엔티티를 수정하고, 수정된 결과를 응답 DTO로 반환합니다.
+   *
+   * @param campaignId 수정할 캠페인 ID
+   * @param req 캠페인 수정 요청 DTO
+   * @return 수정된 캠페인 응답 DTO
+   */
+  @Transactional
+  public CampaignRes update(Long campaignId, CampaignUpdateReq req) {
+    Campaign campaign = findCampaignById(campaignId);
+    campaign.update(req);
+
+    return CampaignRes.from(campaign);
+  }
+
+  /**
+   * 특정 캠페인을 삭제합니다.
+   * <p><b>실행 로직:</b><br>
+   * 1. 캠페인 ID로 삭제 대상 엔티티를 조회합니다. <br>
+   * 2. 대상 캠페인이 존재하지 않으면 {@code ResponseStatusException}을 발생시킵니다. <br>
+   * 3. 조회된 캠페인 엔티티를 데이터베이스에서 삭제합니다.
+   *
+   * @param campaignId 삭제할 캠페인 ID
+   */
+  @Transactional
+  public void delete(Long campaignId) {
+    Campaign campaign = findCampaignById(campaignId);
+    campaignRepository.delete(campaign);
   }
 
   /**

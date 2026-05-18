@@ -2,6 +2,7 @@ package com.back.domain.campaign.entity;
 
 import com.back.domain.advertiser.entity.Advertiser;
 import com.back.domain.campaign.dto.CampaignReq;
+import com.back.domain.campaign.dto.CampaignUpdateReq;
 import com.back.global.jpa.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -26,8 +27,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class Campaign extends BaseEntity {
 
-  private static final CampaignStatus DEFAULT_STATUS = CampaignStatus.ACTIVE;
-
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "advertiser_id", nullable = false)
   private Advertiser advertiser;
@@ -47,9 +46,10 @@ public class Campaign extends BaseEntity {
   @Column(nullable = false)
   private LocalDate endDate;
 
+  @Builder.Default
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
-  private CampaignStatus status;
+  private CampaignStatus status = CampaignStatus.ACTIVE;
 
   /**
    * 캠페인 등록 요청 DTO를 캠페인 엔티티로 변환합니다.
@@ -70,7 +70,23 @@ public class Campaign extends BaseEntity {
         .budget(req.budget())
         .startDate(req.startDate())
         .endDate(req.endDate())
-        .status(DEFAULT_STATUS)
         .build();
+  }
+
+  /**
+   * 캠페인 정보를 수정합니다.
+   * <p><b>실행 로직:</b><br>
+   * 1. 수정 요청 DTO에서 캠페인명, 목적, 예산, 시작일, 종료일, 상태값을 읽어옵니다. <br>
+   * 2. 현재 캠페인 엔티티의 필드를 새로운 값으로 변경합니다.
+   *
+   * @param req 캠페인 수정 요청 DTO
+   */
+  public void update(CampaignUpdateReq req) {
+    this.name = req.name();
+    this.objective = req.objective();
+    this.budget = req.budget();
+    this.startDate = req.startDate();
+    this.endDate = req.endDate();
+    this.status = req.status();
   }
 }
