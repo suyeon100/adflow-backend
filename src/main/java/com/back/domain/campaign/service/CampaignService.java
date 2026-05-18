@@ -50,7 +50,7 @@ public class CampaignService {
    * @return 전체 캠페인 응답 목록
    */
   public List<CampaignRes> getCampaigns() {
-    return campaignRepository.findAll().stream()
+    return campaignRepository.findAllWithAdvertiser().stream()
         .map(CampaignRes::from)
         .toList();
   }
