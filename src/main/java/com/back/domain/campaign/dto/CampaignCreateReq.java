@@ -16,7 +16,7 @@ import java.time.LocalDate;
  * @param endDate 캠페인 종료일
  * @param budget 캠페인 예산
  */
-public record CampaignReq(
+public record CampaignCreateReq(
     @NotNull(message = "광고주 ID는 필수 입력 항목입니다.")
     Long advertiserId,
 

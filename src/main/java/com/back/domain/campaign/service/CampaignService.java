@@ -2,7 +2,7 @@ package com.back.domain.campaign.service;
 
 import com.back.domain.advertiser.entity.Advertiser;
 import com.back.domain.advertiser.repository.AdvertiserRepository;
-import com.back.domain.campaign.dto.CampaignReq;
+import com.back.domain.campaign.dto.CampaignCreateReq;
 import com.back.domain.campaign.dto.CampaignRes;
 import com.back.domain.campaign.dto.CampaignUpdateReq;
 import com.back.domain.campaign.entity.Campaign;
@@ -33,11 +33,20 @@ public class CampaignService {
    * @return 저장된 캠페인 응답 DTO
    */
   @Transactional
-  public CampaignRes create(CampaignReq req) {
+  public CampaignRes create(CampaignCreateReq req) {
     Advertiser advertiser = advertiserRepository.findById(req.advertiserId())
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "광고주를 찾을 수 없습니다."));
 
-    Campaign savedCampaign = campaignRepository.save(Campaign.from(advertiser, req));
+    Campaign savedCampaign = campaignRepository.save(
+        Campaign.create(
+            advertiser,
+            req.name(),
+            req.objective(),
+            req.budget(),
+            req.startDate(),
+            req.endDate()
+        )
+    );
     return CampaignRes.from(savedCampaign);
   }
 
@@ -67,7 +76,7 @@ public class CampaignService {
    * @return 조회된 캠페인 응답 DTO
    */
   public CampaignRes getCampaign(Long campaignId) {
-    return CampaignRes.from(findCampaignById(campaignId));
+    return CampaignRes.from(findCampaignByIdWithAdvertiser(campaignId));
   }
 
   /**
@@ -83,8 +92,15 @@ public class CampaignService {
    */
   @Transactional
   public CampaignRes update(Long campaignId, CampaignUpdateReq req) {
-    Campaign campaign = findCampaignById(campaignId);
-    campaign.update(req);
+    Campaign campaign = findCampaignByIdWithAdvertiser(campaignId);
+    campaign.update(
+        req.name(),
+        req.objective(),
+        req.budget(),
+        req.startDate(),
+        req.endDate(),
+        req.status()
+    );
 
     return CampaignRes.from(campaign);
   }
@@ -116,6 +132,21 @@ public class CampaignService {
    */
   private Campaign findCampaignById(Long campaignId) {
     return campaignRepository.findById(campaignId)
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "캠페인을 찾을 수 없습니다."));
+  }
+
+  /**
+   * 광고주 정보를 함께 포함하여 캠페인 ID로 캠페인 엔티티를 조회합니다.
+   * <p><b>실행 로직:</b><br>
+   * 1. 저장소에서 캠페인과 연관된 광고주를 fetch join으로 함께 조회합니다. <br>
+   * 2. 조회 결과가 없으면 404 예외를 발생시킵니다. <br>
+   * 3. 조회된 캠페인 엔티티를 반환합니다.
+   *
+   * @param campaignId 조회할 캠페인 ID
+   * @return 광고주 정보가 함께 조회된 캠페인 엔티티
+   */
+  private Campaign findCampaignByIdWithAdvertiser(Long campaignId) {
+    return campaignRepository.findByIdWithAdvertiser(campaignId)
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "캠페인을 찾을 수 없습니다."));
   }
 }

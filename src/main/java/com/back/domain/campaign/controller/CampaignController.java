@@ -1,14 +1,14 @@
 package com.back.domain.campaign.controller;
 
-import com.back.domain.campaign.dto.CampaignReq;
+import com.back.domain.campaign.dto.CampaignCreateReq;
 import com.back.domain.campaign.dto.CampaignRes;
 import com.back.domain.campaign.dto.CampaignUpdateReq;
 import com.back.domain.campaign.service.CampaignService;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,7 +37,7 @@ public class CampaignController {
    */
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public CampaignRes create(@Valid @RequestBody CampaignReq req) {
+  public CampaignRes create(@Valid @RequestBody CampaignCreateReq req) {
     return campaignService.create(req);
   }
 
