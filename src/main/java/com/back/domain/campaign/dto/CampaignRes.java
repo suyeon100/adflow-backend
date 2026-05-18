@@ -1,6 +1,7 @@
 package com.back.domain.campaign.dto;
 
 import com.back.domain.campaign.entity.Campaign;
+import com.back.domain.campaign.entity.CampaignStatus;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -28,7 +29,7 @@ public record CampaignRes(
     Long budget,
     LocalDate startDate,
     LocalDate endDate,
-    String status,
+    CampaignStatus status,
     LocalDateTime createDate,
     LocalDateTime modifyDate
 ) {

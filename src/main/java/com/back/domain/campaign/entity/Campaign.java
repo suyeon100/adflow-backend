@@ -5,6 +5,8 @@ import com.back.domain.campaign.dto.CampaignReq;
 import com.back.global.jpa.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -24,7 +26,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class Campaign extends BaseEntity {
 
-  private static final String DEFAULT_STATUS = "ACTIVE";
+  private static final CampaignStatus DEFAULT_STATUS = CampaignStatus.ACTIVE;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "advertiser_id", nullable = false)
@@ -45,8 +47,9 @@ public class Campaign extends BaseEntity {
   @Column(nullable = false)
   private LocalDate endDate;
 
+  @Enumerated(EnumType.STRING)
   @Column(nullable = false)
-  private String status;
+  private CampaignStatus status;
 
   /**
    * 캠페인 등록 요청 DTO를 캠페인 엔티티로 변환합니다.
